@@ -29,7 +29,7 @@
     }
 
     .container {
-      max-width: 860px;
+      max-width: 900px;
       margin: 0 auto;
     }
 
@@ -101,7 +101,7 @@
       display: flex;
       gap: 0.6rem;
       overflow-x: auto;
-      padding-bottom: 0.5rem;
+      padding-bottom: 0.75rem;
       margin-bottom: 1.5rem;
     }
 
@@ -122,6 +122,20 @@
       background: var(--primary-dark);
       color: #fff;
       border-color: var(--primary-dark);
+    }
+
+    /* Category Subtitle */
+    .menu-header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .menu-count {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 600;
     }
 
     /* Menu Cards */
@@ -145,6 +159,18 @@
     .drink-card:hover {
       transform: translateY(-2px);
       box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+    }
+
+    .drink-badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--accent);
+      background: #fffbeb;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      margin-bottom: 0.4rem;
+      border: 1px solid #fef3c7;
     }
 
     .drink-name {
@@ -339,7 +365,7 @@
     <header>
       <div class="badge-tw">🧋 Taiwanese Beverage IS & Analytics</div>
       <h1>LimTé (喝茶)</h1>
-      <p>Explore iconic Taiwanese boba menus, customize formulas, and analyze consumption trends.</p>
+      <p>Comprehensive English menus for Taiwan's leading boba brands, customizable logging, and intake analytics.</p>
     </header>
 
     <div class="nav-tabs">
@@ -351,6 +377,10 @@
     <!-- View 1: Menu Explorer -->
     <div id="menuView" class="view-panel active">
       <div class="brand-filter" id="brandFilter"></div>
+      <div class="menu-header-bar">
+        <h3 id="currentBrandTitle" style="font-size: 1.15rem; font-weight: 700;"></h3>
+        <span class="menu-count" id="currentBrandCount"></span>
+      </div>
       <div class="menu-grid" id="menuGrid"></div>
     </div>
 
@@ -365,7 +395,7 @@
 
           <div class="form-group">
             <label>Beverage Name</label>
-            <input type="text" id="formDrink" required placeholder="e.g., Cheese Foam Spring Oolong, Honey Pearl Latte" />
+            <input type="text" id="formDrink" required placeholder="e.g., Cheese Foam Spring Oolong, Honey Pearl Black Tea Latte" />
           </div>
 
           <div class="form-group">
@@ -392,18 +422,18 @@
 
           <div class="form-group">
             <label>Add-ons & Toppings</label>
-            <input type="text" id="formToppings" placeholder="e.g., Honey Pearls, Grass Jelly, Cheese Foam (optional)" />
+            <input type="text" id="formToppings" placeholder="e.g., Honey Pearls, Oolong Jelly, Grass Jelly (optional)" />
           </div>
 
           <div class="form-group">
-            <label>Price (NT$ or USD equivalent)</label>
+            <label>Price (NT$)</label>
             <input type="number" id="formPrice" required min="0" placeholder="60" />
           </div>
 
           <div class="form-group">
             <label>Flavor Rating</label>
             <select id="formRating">
-              <option value="5">⭐⭐⭐⭐⭐ Excellent &bull; Repeat Order</option>
+              <option value="5">⭐⭐⭐⭐⭐ Outstanding &bull; Repeat Order</option>
               <option value="4" selected>⭐⭐⭐⭐ Solid &bull; Recommended</option>
               <option value="3">⭐⭐⭐ Neutral &bull; Average</option>
               <option value="2">⭐⭐ Mediocre &bull; Unlikely Repeat</option>
@@ -424,7 +454,7 @@
           <div class="stat-value" id="statCups">0</div>
         </div>
         <div class="stat-card">
-          <div class="stat-label">Total Spend</div>
+          <div class="stat-label">Total Spend (NT$)</div>
           <div class="stat-value" id="statSpending">$0</div>
         </div>
         <div class="stat-card">
@@ -432,7 +462,7 @@
           <div class="stat-value" id="statAvgSugar">0%</div>
         </div>
         <div class="stat-card">
-          <div class="stat-label">Top Brand</div>
+          <div class="stat-label">Favorite Brand</div>
           <div class="stat-value" id="statTopBrand" style="font-size: 1.15rem;">None</div>
         </div>
       </div>
@@ -443,37 +473,83 @@
   </div>
 
   <script>
+    // Complete 4-brand menu catalog with standard Taiwan pricing (NT$) and calorie benchmarks
     const menuDatabase = [
       {
         brand: "Oolong Tea Project (得正)",
         drinks: [
-          { name: "Cheese Foam Spring Oolong", category: "Cheese Foam Series", price: 60, cal: 280 },
-          { name: "Fresh Lemon Spring Oolong", category: "Fruit Tea Series", price: 55, cal: 170 },
-          { name: "Roasted Oolong Fresh Milk Tea", category: "Fresh Milk Series", price: 65, cal: 220 }
+          { name: "Spring Oolong Tea (春烏龍)", category: "Pure Brewed Oolong", price: 35, cal: 0 },
+          { name: "Roasted Oolong Tea (焙烏龍)", category: "Pure Brewed Oolong", price: 35, cal: 0 },
+          { name: "Golden Oolong Tea (金烏龍)", category: "Pure Brewed Oolong", price: 35, cal: 0 },
+          { name: "Cheese Foam Spring Oolong (芝士奶蓋春烏龍)", category: "Cheese Foam Series", price: 60, cal: 260 },
+          { name: "Cheese Foam Roasted Oolong (芝士奶蓋焙烏龍)", category: "Cheese Foam Series", price: 60, cal: 260 },
+          { name: "Cheese Foam Golden Oolong (芝士奶蓋金烏龍)", category: "Cheese Foam Series", price: 60, cal: 260 },
+          { name: "Fresh Lemon Spring Oolong (檸檬春烏龍)", category: "Fruit Oolong Series", price: 55, cal: 170 },
+          { name: "Sweet Orange Spring Oolong (香橙春烏龍)", category: "Fruit Oolong Series", price: 65, cal: 190 },
+          { name: "Sugarcane Spring Oolong (甘蔗春烏龍)", category: "Fruit Oolong Series", price: 65, cal: 210 },
+          { name: "Passionfruit Spring Oolong (百香春烏龍)", category: "Fruit Oolong Series", price: 60, cal: 180 },
+          { name: "Spring Oolong Fresh Milk Tea (春烏龍鮮奶)", category: "Fresh Milk Series", price: 65, cal: 210 },
+          { name: "Roasted Oolong Fresh Milk Tea (焙烏龍鮮奶)", category: "Fresh Milk Series", price: 65, cal: 220 },
+          { name: "Golden Oolong Fresh Milk Tea (金烏龍鮮奶)", category: "Fresh Milk Series", price: 65, cal: 215 },
+          { name: "Signature Oolong Milk Tea (得正烏龍奶茶)", category: "Classic Milk Tea", price: 50, cal: 360 },
+          { name: "Oolong Tea with Oolong Jelly (焙烏龍茶凍春烏龍)", category: "Artisan Jelly Series", price: 50, cal: 110 }
         ]
       },
       {
         brand: "Milksha (迷客夏)",
         drinks: [
-          { name: "Honey Pearl Black Tea Latte", category: "Fresh Milk Latte", price: 75, cal: 340 },
-          { name: "Handcrafted Fresh Taro Milk", category: "Signature Specials", price: 80, cal: 380 },
-          { name: "Roasted Barley Tea (Caffeine-Free)", category: "Pure Brewed Tea", price: 35, cal: 0 }
+          { name: "Honey Pearl Black Tea Latte (珍珠紅茶拿鐵)", category: "Fresh Milk Specialty", price: 75, cal: 340 },
+          { name: "Earl Grey Fresh Milk Latte (伯爵紅茶拿鐵)", category: "Fresh Milk Specialty", price: 65, cal: 210 },
+          { name: "Roasted Barley Milk Latte (大麥拿鐵)", category: "Fresh Milk Specialty", price: 65, cal: 200 },
+          { name: "Handcrafted Fresh Taro Milk (手作芋頭鮮奶)", category: "Farm Handcrafted", price: 80, cal: 380 },
+          { name: "Valrhona 100% Cocoa Milk (法芙娜純可可鮮奶)", category: "Farm Handcrafted", price: 75, cal: 330 },
+          { name: "Matcha Fresh Milk Latte (出雲抹茶鮮奶)", category: "Farm Handcrafted", price: 85, cal: 270 },
+          { name: "Roasted Barley Tea (決明大麥茶)", category: "Pure Brews (Caffeine-Free)", price: 35, cal: 0 },
+          { name: "Dazheng Black Tea (大正紅茶)", category: "Pure Brews", price: 35, cal: 0 },
+          { name: "Early Dew Green Tea (初露青茶)", category: "Pure Brews", price: 35, cal: 0 },
+          { name: "Willow Orange Green Tea (柳丁綠茶)", category: "Fresh Fruit Tea", price: 65, cal: 180 },
+          { name: "Fresh Sugarcane Green Tea (原鄉冬瓜檸檬 / 甘蔗青)", category: "Fresh Fruit Tea", price: 65, cal: 210 },
+          { name: "Honey Lemon Aloe Green Tea (蜜香檸檬蘆薈)", category: "Fresh Fruit Tea", price: 65, cal: 190 },
+          { name: "Brown Sugar Pearl Milk (黑糖珍珠鮮奶)", category: "Brown Sugar Series", price: 80, cal: 410 },
+          { name: "Grass Jelly Milk Latte (仙草凍鮮奶)", category: "Chewy Classics", price: 70, cal: 230 }
         ]
       },
       {
         brand: "50 Lan (50嵐)",
         drinks: [
-          { name: "Signature No. 1 (Trio Toppings Oolong)", category: "Chewy Specialties", price: 50, cal: 310 },
-          { name: "Vanilla Ice Cream Black Tea", category: "Flavored Tea", price: 55, cal: 240 },
-          { name: "Classic Boba Milk Tea", category: "Classic Milk Tea", price: 55, cal: 390 }
+          { name: "Signature No. 1: Four Seasons with Trio Toppings (1號 四季春珍波椰)", category: "Signature Specials", price: 50, cal: 320 },
+          { name: "Boba Milk Tea (波霸奶茶)", category: "Classic Milk Tea", price: 55, cal: 390 },
+          { name: "Small Pearl Milk Tea (珍珠奶茶)", category: "Classic Milk Tea", price: 55, cal: 380 },
+          { name: "Coconut Jelly Milk Tea (椰果奶茶)", category: "Classic Milk Tea", price: 55, cal: 360 },
+          { name: "Pudding Milk Tea (布丁奶茶)", category: "Classic Milk Tea", price: 65, cal: 420 },
+          { name: "Vanilla Ice Cream Black Tea (冰淇淋紅茶)", category: "Flavored Tea", price: 55, cal: 250 },
+          { name: "Yakult Green Tea (養樂多綠茶)", category: "Flavored Tea", price: 55, cal: 200 },
+          { name: "Plum Green Tea (梅子綠茶)", category: "Flavored Tea", price: 50, cal: 160 },
+          { name: "Honey Green Tea (蜂蜜綠茶)", category: "Flavored Tea", price: 55, cal: 190 },
+          { name: "Four Seasons Green Tea (四季春茶)", category: "Pure Tea Brews", price: 35, cal: 0 },
+          { name: "Jasmine Green Tea (茉莉綠茶)", category: "Pure Tea Brews", price: 35, cal: 0 },
+          { name: "Assam Black Tea (阿薩姆紅茶)", category: "Pure Tea Brews", price: 35, cal: 0 },
+          { name: "Golden Oolong Tea (黃金烏龍)", category: "Pure Tea Brews", price: 35, cal: 0 },
+          { name: "Fresh Milk Black Tea Latte with Boba (紅茶拿鐵加波霸)", category: "Fresh Milk Tea", price: 70, cal: 310 },
+          { name: "Fresh Milk Oolong Latte (烏龍拿鐵)", category: "Fresh Milk Tea", price: 65, cal: 210 }
         ]
       },
       {
         brand: "A Nice Holiday (一沐日)",
         drinks: [
-          { name: "Taiwanese Herbal Jelly Milk Tea", category: "Artisan Chewy Series", price: 65, cal: 360 },
-          { name: "Brown Sugar Lemon Grass Jelly", category: "Citrus Fruit Tea", price: 60, cal: 210 },
-          { name: "Roasted Buckwheat Tea", category: "Wellness Herbal", price: 40, cal: 0 }
+          { name: "Taiwanese Herbal Jelly Milk Tea (逮丸奶茶 - 草仔粿)", category: "Artisan Chewy Series", price: 65, cal: 360 },
+          { name: "Brown Sugar Lemon with Grass Jelly (粉粿黑糖檸檬)", category: "Artisan Chewy Series", price: 60, cal: 220 },
+          { name: "Osmanthus Honey Buckwheat with Fen-Guo (桂花蕎麥茶加粉粿)", category: "Artisan Chewy Series", price: 60, cal: 210 },
+          { name: "Roasted Buckwheat Tea (油切蕎麥茶 - Caffeine Free)", category: "Wellness Pure Brews", price: 40, cal: 0 },
+          { name: "Sun Moon Lake Ruby Black Tea 18 (日月潭紅玉)", category: "Wellness Pure Brews", price: 45, cal: 0 },
+          { name: "Taiwan Alpine High Mountain Green (高山青茶)", category: "Wellness Pure Brews", price: 35, cal: 0 },
+          { name: "Bamboo Charcoal Emerald Green (竹香翡翠綠茶)", category: "Wellness Pure Brews", price: 35, cal: 0 },
+          { name: "Lychee Oolong with Agar Crystals (荔枝烏龍晶球)", category: "Fruit & Crisp Series", price: 60, cal: 190 },
+          { name: "Golden Yuzu Green Tea (黃金柚子綠茶)", category: "Fruit & Crisp Series", price: 60, cal: 200 },
+          { name: "Winter Melon Lemon Tea (冬瓜檸檬)", category: "Fruit & Crisp Series", price: 50, cal: 180 },
+          { name: "Charcoal Roasted Milk Tea (炭焙厚奶茶)", category: "Artisan Milk Tea", price: 55, cal: 370 },
+          { name: "Buckwheat Fresh Milk Latte (蕎麥鮮奶茶)", category: "Fresh Milk Series", price: 70, cal: 220 },
+          { name: "Ruby Black Tea Latte with Grass Jelly (紅玉拿鐵加草仔粿)", category: "Fresh Milk Series", price: 75, cal: 310 }
         ]
       }
     ];
@@ -501,17 +577,21 @@
       grid.innerHTML = "";
       const currentBrand = menuDatabase[selectedBrandIndex];
 
+      document.getElementById("currentBrandTitle").innerText = currentBrand.brand;
+      document.getElementById("currentBrandCount").innerText = `${currentBrand.drinks.length} Items Available`;
+
       currentBrand.drinks.forEach(drink => {
         const card = document.createElement("div");
         card.className = "drink-card";
         card.innerHTML = `
           <div>
+            <span class="drink-badge">${drink.category}</span>
             <div class="drink-name">${drink.name}</div>
-            <div class="drink-meta">${currentBrand.brand} &bull; ${drink.category} &bull; ~${drink.cal} kcal</div>
+            <div class="drink-meta">${currentBrand.brand.split(" ")[0]} &bull; ~${drink.cal} kcal</div>
           </div>
           <div class="drink-footer">
-            <span class="drink-price">$${drink.price}</span>
-            <button class="btn-log-pick" onclick="selectForLog('${currentBrand.brand}', '${drink.name}', ${drink.price})">Quick Log &rarr;</button>
+            <span class="drink-price">NT$ ${drink.price}</span>
+            <button class="btn-log-pick" onclick="selectForLog('${currentBrand.brand.replace(/'/g, "\\'")}', '${drink.name.replace(/'/g, "\\'")}', ${drink.price})">Log This &rarr;</button>
           </div>
         `;
         grid.appendChild(card);
@@ -555,7 +635,7 @@
         drink: document.getElementById("formDrink").value,
         sugar: document.querySelector('input[name="sugar"]:checked').value,
         ice: document.querySelector('input[name="ice"]:checked').value,
-        toppings: document.getElementById("formToppings").value || "None",
+        toppings: document.getElementById("formToppings").value.trim() || "None",
         price: parseFloat(document.getElementById("formPrice").value) || 0,
         rating: document.getElementById("formRating").value,
         date: new Date().toLocaleDateString("en-US", { month: "short", day: "numeric" })
@@ -563,13 +643,13 @@
 
       logs.unshift(newEntry);
       saveLogs(logs);
-      alert("Added to intake logs!");
+      alert("✅ Added to your intake records!");
       document.getElementById("drinkForm").reset();
       switchView("analyticsView");
     }
 
     function deleteLog(id) {
-      if (confirm("Delete this log record?")) {
+      if (confirm("Delete this intake record?")) {
         const logs = getLogs().filter(l => l.id !== id);
         saveLogs(logs);
         renderAnalytics();
@@ -600,7 +680,7 @@
       historyContainer.innerHTML = "";
 
       if (logs.length === 0) {
-        historyContainer.innerHTML = `<p style="color: var(--text-muted); text-align: center; padding: 2.5rem;">No drinks logged yet. Try browsing the menu and log your first cup!</p>`;
+        historyContainer.innerHTML = `<p style="color: var(--text-muted); text-align: center; padding: 2.5rem;">No drinks logged yet. Explore the menu and log your first cup!</p>`;
         return;
       }
 
@@ -611,10 +691,10 @@
           <div class="log-details">
             <h4>${l.drink} <span style="font-weight: 500; font-size: 0.85rem; color: var(--text-muted);">(${l.brand})</span></h4>
             <div class="log-tags">
-              <span class="log-tag">💰 $${l.price}</span>
+              <span class="log-tag">💰 NT$ ${l.price}</span>
               <span class="log-tag">🍬 ${l.sugar} Sugar</span>
               <span class="log-tag">🧊 ${l.ice}</span>
-              <span class="log-tag">🧋 Topping: ${l.toppings}</span>
+              <span class="log-tag">🧋 Toppings: ${l.toppings}</span>
               <span class="log-tag">⭐ ${l.rating}/5</span>
               <span class="log-tag">📅 ${l.date}</span>
             </div>
