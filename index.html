@@ -232,7 +232,7 @@
       margin-bottom: 0.45rem;
     }
 
-    input[type="text"], input[type="number"], select {
+    input[type="text"], input[type="number"], select, textarea {
       width: 100%;
       padding: 0.7rem 0.9rem;
       border: 1px solid var(--border);
@@ -240,6 +240,12 @@
       font-size: 0.92rem;
       background: #fafaf9;
       color: var(--text-main);
+      font-family: inherit;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
     }
 
     .options-row {
@@ -322,8 +328,12 @@
       margin-bottom: 0.85rem;
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: flex-start;
       gap: 1rem;
+    }
+
+    .log-details {
+      flex: 1;
     }
 
     .log-details h4 {
@@ -348,6 +358,17 @@
       border: 1px solid var(--border);
     }
 
+    .log-comment {
+      margin-top: 0.6rem;
+      font-size: 0.86rem;
+      color: var(--text-main);
+      background: #fafaf9;
+      border-left: 3px solid var(--accent);
+      padding: 0.45rem 0.75rem;
+      border-radius: 4px;
+      font-style: italic;
+    }
+
     .btn-delete {
       background: none;
       border: none;
@@ -355,6 +376,7 @@
       font-size: 0.85rem;
       cursor: pointer;
       font-weight: 600;
+      padding-top: 0.2rem;
     }
 
     .btn-delete:hover { text-decoration: underline; }
@@ -364,7 +386,7 @@
   <div class="container">
     <header>
       <div class="badge-tw">🧋 Taiwanese Beverage IS & Analytics</div>
-      <h1>LimTé</h1>
+      <h1>LimTé (喝茶)</h1>
       <p>Comprehensive English menus for Taiwan's leading boba brands, customizable logging, and intake analytics.</p>
     </header>
 
@@ -441,6 +463,12 @@
             </select>
           </div>
 
+          <!-- Tasting Notes / Comments Section -->
+          <div class="form-group">
+            <label>Tasting Notes & Comments (Optional)</label>
+            <textarea id="formComment" placeholder="e.g., Subtle floral aroma with rich milk foam, best with zero sugar and less ice..."></textarea>
+          </div>
+
           <button type="submit" class="btn-submit">Save Intake Entry</button>
         </form>
       </div>
@@ -473,7 +501,6 @@
   </div>
 
   <script>
-    // Complete 4-brand menu catalog with standard Taiwan pricing (NT$) and calorie benchmarks
     const menuDatabase = [
       {
         brand: "Oolong Tea Project (得正)",
@@ -638,6 +665,7 @@
         toppings: document.getElementById("formToppings").value.trim() || "None",
         price: parseFloat(document.getElementById("formPrice").value) || 0,
         rating: document.getElementById("formRating").value,
+        comment: document.getElementById("formComment").value.trim(),
         date: new Date().toLocaleDateString("en-US", { month: "short", day: "numeric" })
       };
 
@@ -698,6 +726,7 @@
               <span class="log-tag">⭐ ${l.rating}/5</span>
               <span class="log-tag">📅 ${l.date}</span>
             </div>
+            ${l.comment ? `<div class="log-comment">“${l.comment}”</div>` : ''}
           </div>
           <button class="btn-delete" onclick="deleteLog(${l.id})">Delete</button>
         `;
