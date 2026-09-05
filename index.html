@@ -26,19 +26,19 @@
       background-color: var(--bg);
       color: var(--text-main);
       line-height: 1.6;
-      padding: 2.5rem 1.25rem 5rem;
+      padding: 2rem 1.25rem 5rem;
       -webkit-font-smoothing: antialiased;
     }
 
     .container {
-      max-width: 900px;
+      max-width: 920px;
       margin: 0 auto;
     }
 
     /* Header */
     header {
       text-align: center;
-      margin-bottom: 2.25rem;
+      margin-bottom: 1.75rem;
     }
 
     .badge-tw {
@@ -56,7 +56,7 @@
     }
 
     h1 {
-      font-size: 2.4rem;
+      font-size: 2.5rem;
       font-weight: 800;
       color: var(--primary-dark);
       letter-spacing: -0.03em;
@@ -65,21 +65,28 @@
 
     header p {
       color: var(--text-muted);
-      font-size: 1rem;
+      font-size: 0.98rem;
       margin-top: 0.45rem;
       max-width: 650px;
       margin-left: auto;
       margin-right: auto;
     }
 
-    /* Top Control Bar */
+    /* Sticky Top Control Bar */
     .top-controls {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(250, 249, 246, 0.96);
+      backdrop-filter: blur(8px);
+      padding: 0.85rem 0;
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
       gap: 1rem;
       margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
     }
 
     .nav-tabs {
@@ -94,7 +101,7 @@
 
     .tab-btn {
       flex: 1;
-      padding: 0.7rem 0.85rem;
+      padding: 0.65rem 0.85rem;
       border: none;
       background: transparent;
       color: var(--text-muted);
@@ -125,7 +132,7 @@
     .curr-btn {
       border: none;
       background: transparent;
-      padding: 0.5rem 0.95rem;
+      padding: 0.48rem 0.95rem;
       font-size: 0.82rem;
       font-weight: 700;
       color: var(--text-muted);
@@ -183,49 +190,45 @@
       box-shadow: 0 4px 10px rgba(120, 53, 15, 0.2);
     }
 
+    /* Clean Vector Search Box (No text overlap) */
     .search-box {
-  position: relative;
-  width: 100%;
-  max-width: 280px;
-  display: flex;
-  align-items: center;
-}
+      position: relative;
+      width: 100%;
+      max-width: 280px;
+      display: flex;
+      align-items: center;
+    }
 
-/* Crisp, fixed-dimension vector icon placed safely within left margin */
-.search-icon {
-  position: absolute;
-  left: 14px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 16px;
-  height: 16px;
-  color: var(--text-muted);
-  pointer-events: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2;
-}
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      color: var(--text-muted);
+      pointer-events: none;
+      z-index: 2;
+    }
 
-/* 42px left padding leaves a comfortable 12px buffer before text starts */
-.search-box input {
-  width: 100%;
-  padding: 0.62rem 1rem 0.62rem 42px;
-  border: 1px solid var(--border);
-  border-radius: 9999px;
-  font-size: 0.9rem;
-  background: var(--card-bg);
-  color: var(--text-main);
-  outline: none;
-  box-shadow: var(--shadow-sm);
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
+    .search-box input {
+      width: 100%;
+      padding: 0.62rem 1rem 0.62rem 42px;
+      border: 1px solid var(--border);
+      border-radius: 9999px;
+      font-size: 0.9rem;
+      background: var(--card-bg);
+      color: var(--text-main);
+      outline: none;
+      box-shadow: var(--shadow-sm);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
 
-.search-box input:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(146, 64, 14, 0.12);
-}
-    
+    .search-box input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(146, 64, 14, 0.12);
+    }
+
     .menu-header-bar {
       display: flex;
       justify-content: space-between;
@@ -320,7 +323,7 @@
       font-size: 1.15rem;
       font-weight: 800;
       color: var(--primary);
-      min-width: 85px;
+      min-width: 90px;
       text-align: right;
     }
 
@@ -342,7 +345,7 @@
       transform: translateY(-1px);
     }
 
-    /* Form Card */
+    /* Form Styles */
     .card {
       background: var(--card-bg);
       border: 1px solid var(--border);
@@ -529,11 +532,12 @@
 <body>
   <div class="container">
     <header>
-      <h1>🧋LimTé</h1>
+      <div class="badge-tw">🧋 Taiwanese Beverage IS & Analytics</div>
+      <h1>🧋 LimTé</h1>
       <p>Explore full English menus from Taiwan's signature bubble tea brands, toggle real-time NTD/USD exchange rates, and quantify intake habits.</p>
     </header>
 
-    <!-- Top Controls: Views & Currency Switcher -->
+    <!-- Sticky Navigation & Currency Toggle -->
     <div class="top-controls">
       <div class="nav-tabs">
         <button class="tab-btn active" onclick="switchView('menuView')">Browse Menu</button>
@@ -552,15 +556,6 @@
       <div class="menu-toolbar">
         <div class="brand-filter" id="brandFilter"></div>
         <div class="search-box">
-          <span class="search-icon">🔍</span>
-          <input
-            type="text"
-            id="menuSearchInput"
-            placeholder="Search drinks or categories..."
-            oninput="handleSearch(this.value)"
-          />
-        </div>
-        <div class="search-box">
           <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -572,19 +567,20 @@
             oninput="handleSearch(this.value)"
           />
         </div>
+      </div>
 
       <div class="menu-header-bar">
         <h3 id="currentBrandTitle" class="brand-heading"></h3>
         <span class="menu-count" id="currentBrandCount"></span>
       </div>
 
-      <!-- Clean Line-by-Line Menu Container -->
       <div class="menu-list-container" id="menuList"></div>
     </div>
 
-    <!-- View 2: Drink Logger -->
+    <!-- View 2: Drink Logger Form -->
     <div id="logView" class="view-panel">
       <div class="card">
+        <h2 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 1.25rem; color: var(--primary-dark);">✏️ Log a Cup</h2>
         <form id="drinkForm" onsubmit="handleFormSubmit(event)">
           <div class="form-group">
             <label>Brand Name</label>
@@ -649,8 +645,10 @@
       </div>
     </div>
 
-    <!-- View 3: Analytics Dashboard -->
+    <!-- View 3: Intake Analytics Dashboard -->
     <div id="analyticsView" class="view-panel">
+      <h2 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 1.25rem; color: var(--primary-dark);">📊 Intake Analytics & Overview</h2>
+      
       <div class="analytics-grid">
         <div class="stat-card">
           <div class="stat-label">Total Cups Logged</div>
@@ -676,7 +674,6 @@
   </div>
 
   <script>
-    // Global State for Currency (1 USD = 32 NTD)
     let currentCurrency = 'NTD';
     const FX_RATE = 32.0;
 
@@ -701,7 +698,6 @@
       renderAnalytics();
     }
 
-    // Complete Database with full character brand names
     const menuDatabase = [
       {
         brand: "Oolong Tea Project (得正)",
@@ -782,14 +778,13 @@
       }
     ];
 
-    let selectedBrandIndex = -1; // -1 = All Brands
+    let selectedBrandIndex = -1;
     let currentSearchTerm = "";
 
     function renderBrands() {
       const container = document.getElementById("brandFilter");
       container.innerHTML = "";
 
-      // All Brands chip
       const allChip = document.createElement("button");
       allChip.className = `brand-chip ${selectedBrandIndex === -1 ? "active" : ""}`;
       allChip.innerText = "All Brands (全部品牌)";
@@ -800,7 +795,6 @@
       };
       container.appendChild(allChip);
 
-      // Whole character brand names
       menuDatabase.forEach((item, idx) => {
         const chip = document.createElement("button");
         chip.className = `brand-chip ${idx === selectedBrandIndex ? "active" : ""}`;
@@ -892,6 +886,9 @@
 
       const tabIndex = viewId === "menuView" ? 0 : viewId === "logView" ? 1 : 2;
       document.querySelectorAll(".tab-btn")[tabIndex].classList.add("active");
+
+      // Smooth scroll back to top of viewport when switching views
+      window.scrollTo({ top: 0, behavior: "smooth" });
 
       if (viewId === "analyticsView") {
         renderAnalytics();
