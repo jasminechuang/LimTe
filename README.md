@@ -17,3 +17,17 @@
 LimTe/
 ├── index.html       # 專案首頁與核心程式碼
 └── README.md        # 專案說明文件
+```
+## 開始使用
+
+如需在本機端檢視或參與此專案，請依照以下步驟進行：
+
+1. 複製專案庫 (Clone the repository)
+```text
+git clone [https://github.com/jasminechuang/LimTe.git](https://github.com/jasminechuang/LimTe.git)
+```
+3. 開啟專案
+進入專案資料夾後，直接以瀏覽器（如 Google Chrome）開啟 index.html 即可檢視網頁內容。
+
+## 授權說明
+此專案僅供個人作品展示與交流使用。
