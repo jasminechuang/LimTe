@@ -31,3 +31,39 @@ git clone [https://github.com/jasminechuang/LimTe.git](https://github.com/jasmin
 
 ## 授權說明
 此專案僅供個人作品展示與交流使用。
+
+# LimTé
+
+An exploration and intake analytics project themed around Taiwan's signature bubble tea culture.
+
+## About the Project
+
+LimTé is a web project created and maintained by jasminechuang. It features full English menus from popular Taiwanese bubble tea brands (such as Oolong Tea Project, Milksha, 50 Lan, and A Nice Holiday), real-time NTD/USD exchange rate conversion, and personal intake tracking and analysis.
+
+## Tech Stack
+
+*　**Hosting Platform:** GitHub Pages
+
+*　**Core Features:**  Interactive Web Interface, Dynamic Currency Exchange, and Intake Logging System
+
+## Project Structure
+```text
+LimTe/
+├── index.html       # Homepage and core code
+└── README.md        # Project documentation
+```
+
+## Getting Started
+
+To view or contribute to this project locally, follow these steps:
+1. CLone the respository
+```text
+git clone [https://github.com/jasminechuang/LimTe.git](https://github.com/jasminechuang/LimTe.git)
+```
+2. Open the project
+Navigate into the project folder and open index.html in your web browser (such as Google Chrome).
+
+## License
+
+This project is intended for personal portfolio display and educational purposes only.
+
